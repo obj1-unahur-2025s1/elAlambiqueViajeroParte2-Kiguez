@@ -62,3 +62,60 @@ test "luke viaja a hurlingham en el convertible convertido en chatarra" {
   assert.equals(5,chatarra.cañones())
 
   }
+
+test "la moto no puede participar en la carrera porque no puede vijar a hurlingham" {
+  carrera.inscribirAuto(moto)
+  assert.equals([moto], carrera.rechazados())
+}
+
+test "el alambique veloz puede participar en la carrera porque puede vijar a hurlingham" {
+  carrera.inscribirAuto(alambiqueVeloz)
+  assert.equals([alambiqueVeloz], carrera.aceptados())
+}
+
+test "pero si despues la ciudad de la carrera cambia a bagdad, ambos quedan aceptados" {
+  carrera.inscribirAuto(moto)
+  carrera.inscribirAuto(alambiqueVeloz)
+  carrera.cambiarCiudad(bagdad)
+  assert.equals([moto , alambiqueVeloz], carrera.aceptados())
+  assert.that(carrera.rechazados().isEmpty())
+}
+
+test "y si la carrera vuelve a ser en hurlingham, el resultado vuelve a ser el inicial" {
+  carrera.inscribirAuto(moto)
+  carrera.inscribirAuto(alambiqueVeloz)
+  carrera.cambiarCiudad(bagdad)
+  carrera.cambiarCiudad(hurlingham)
+  assert.equals([moto], carrera.rechazados())
+  assert.equals([alambiqueVeloz], carrera.aceptados())
+}
+
+test "la carrera es en bagdad, cuando los autos aceptados van alli sufren desgaste" {
+    carrera.inscribirAuto(alambiqueVeloz)
+    carrera.cambiarCiudad(bagdad)
+    carrera.irALaCarrera()
+    assert.equals(10, alambiqueVeloz.combustible())
+}
+
+test "la antigualla blindada perdio un gangster y ahora tiene 6 dentro" {
+  antiguallaBlindada.bajarGangster("juan")
+  assert.equals(6, antiguallaBlindada.gangsters().size())
+}
+
+test "la antigualla blindada sumo un gangster (llamado marcos) y ahora tiene 8 dentro" {
+  antiguallaBlindada.subirGangster("marcos")
+  assert.equals(8, antiguallaBlindada.gangsters().size())
+}
+
+test "la velocidad de la antigualla es de 41" {
+  assert.equals(41, antiguallaBlindada.velocidad())
+}
+
+test "Si marcos sube a la antigualla su velocidad sube a 47" {
+  antiguallaBlindada.subirGangster("marcos")
+  assert.equals(47, antiguallaBlindada.velocidad())
+}
+
+test "el super convertible se convierte en la moto (que es la mas rapida de la lista)" {
+  assert.equals(100, superConvertible.velocidad())
+}

@@ -26,7 +26,9 @@ object alambiqueVeloz {
         combustible = combustible - consumoPorViaje
     }
     method rapido() = rapido
-    method patenteValida() = patente.head() == "A"
+    method patenteValida() = patente.startsWith("A")
+    method combustible() = combustible
+    method velocidad() = 80
 }
 
 object paris{
@@ -62,6 +64,7 @@ object antigualla {
         gangsters = gangsters -1
     }
     method patenteValida() = chatarra.rapido() 
+     method velocidad() = 60
 
 }
 object chatarra {
@@ -76,6 +79,7 @@ object chatarra {
     }
     method patenteValida() = municiones.take(4) == "ACME" 
     method cañones() = cañones
+     method velocidad() = 50
 
 }
 
@@ -90,7 +94,7 @@ object convertible{
         convertido = vehiculo
     }
     method patenteValida() = convertido.patenteValida()
- 
+     method velocidad() = convertido.velocidad()
 }
 
 object hurlingham{
@@ -102,7 +106,94 @@ object hurlingham{
 
 object moto{
     method rapido() = true
-    method puedeFuncionar() = not moto.rapido()
-    method desgaste() { }
+    method puedeFuncionar() = not self.rapido()
+    method desgaste() {}
     method patenteValida() = false
+    method velocidad() = 100
+}
+
+object carrera{
+
+    var ciudad = hurlingham
+
+    const aceptados = []
+
+    const rechazados = []
+
+    method aceptados() = aceptados
+
+    method rechazados() = rechazados
+
+    method ciudad() = ciudad
+
+    method inscribirAuto(auto) {
+        if(ciudad.puedeLlegar(auto)){
+            aceptados.add(auto)
+        }
+        else rechazados.add(auto)
+    }
+
+
+     method cambiarCiudad(nuevaCiudad) {
+        ciudad = nuevaCiudad
+        rechazados.addAll(aceptados)
+        aceptados.clear()
+        aceptados.addAll(rechazados.filter({a=>ciudad.puedeLlegar(a)}))
+        rechazados.removeAll(aceptados)
+    }
+
+
+    method irALaCarrera() {
+        aceptados.forEach({a=>a.desgaste()})
+    }
+
+
+    method ganador() {
+        return
+            aceptados.max({a=>a.velocidad()})
+    }
+}
+
+object antiguallaBlindada { 
+    const gangsters = ["juan" , "pedro" , "tobias" , "matias" , "lucas" , "ignacio" , "cristian"]
+    method puedeFuncionar() = gangsters.size().even()
+    method rapido() = gangsters.size() > 6
+    method desgaste(){
+        gangsters.remove(gangsters.anyOne())
+    }
+    method patenteValida() = chatarra.rapido()
+    method velocidad() {
+        return
+            gangsters.sum({g=>g.size()})
+    }
+    method subirGangster(gangster) {
+        gangsters.add(gangster)
+    }
+    method bajarGangster(gangster) {
+        gangsters.remove(gangster)
+    }
+    method gangsters() = gangsters
+}
+
+
+object superPerrari {
+    method rapido() = true
+    method puedeFuncionar() = not self.rapido()
+    method desgaste() {}
+    method patenteValida() = true
+    method velocidad() = 90
+    method SabotearAuto() {}  
+}
+
+
+object superConvertible {
+    const autos = [alambiqueVeloz , moto , antiguallaBlindada]
+    var convertido = autos.max({a=>a.velocidad()})
+    method puedeFuncionar() = convertido.puedeFuncionar()
+    method rapido() = convertido.rapido()
+    method desgaste(){
+        convertido.desgaste()
+    }
+    method patenteValida() = convertido.patenteValida()
+    method velocidad() = convertido.velocidad()
 }
